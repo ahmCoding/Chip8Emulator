@@ -55,9 +55,6 @@ void Chip8::loadGame()
     ifstream gFile("src/pong2.c8", ios::in | ios::binary);
     if (gFile.is_open())
     {
-        //const int buffSize=
-        //string buffer;
-
         streampos begin, end;
         begin = gFile.tellg();
         gFile.seekg(0, ios::end);
@@ -210,8 +207,6 @@ void Chip8::emulateCycle()
             v[opcode & 0x0F00 >> 8] += v[opcode & 0x00F0 >> 4];
             pc += 2;
             break;
-
-            //Vx-=Vy, v[f]=0, if no borrow and v[f]=1 ,if there is a borrow
         case 0x0005:
             if ((v[opcode & 0x0F00 >> 8] & 0x0F) >= (v[opcode & 0x00F0 >> 4] & 0x0F))
             {
@@ -281,13 +276,24 @@ void Chip8::emulateCycle()
         case 0x0029: //ToDo
             pc += 2;
             break;
-        case 0x0033: //ToDo
+        case 0x0033:
+            memory[index] = (v[opcode & 0x0F00 >> 8]) / 100;
+            memory[index + 1] = (v[opcode & 0x0F00 >> 8] / 10) & 0x0F;
+            memory[index + 2] = v[opcode & 0x0F00 >> 8] % 10;
             pc += 2;
             break;
-        case 0x0055: //ToDo
+        case 0x0055:
+            for (Ushort i = 0x0; i <= (opcode & 0x0F00 >> 8); i++)
+            {
+                memory[index + i] = v[i];
+            }
             pc += 2;
             break;
-        case 0x0065: //ToDo
+        case 0x0065:
+            for (Ushort i = 0x0; i <= (opcode & 0x0F00 >> 8); i++)
+            {
+                v[i] = memory[index + i];
+            }
             pc += 2;
             break;
 

@@ -12,17 +12,6 @@ using namespace std;
 class Chip8
 {
 private:
-    Ushort opcode;
-    RAM memory[4096];
-    REGISTER_8bit v[16];
-    Ushort index, pc;
-    Uchar screen[64 * 32];
-    Uchar delayTimer;
-    Uchar soundTimer;
-    REGISTER_8bit sp;
-    Ushort stack[16];
-    //Uchar key[16];
-    map<Uchar, bool> key;
     Uchar fontSet[80] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
         0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -41,6 +30,18 @@ private:
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
+    RAM memory[4096];
+    REGISTER_8bit v[16];
+    Uchar screen[64 * 32];
+    Ushort stack[16];
+    map<Uchar, bool> key;
+    Ushort index, pc;
+    Uchar delayTimer;
+    Uchar soundTimer;
+    REGISTER_8bit sp;
+    Ushort opcode;
+
+    //Uchar key[16];
 
 public:
     void keyPadInit();
