@@ -1,7 +1,14 @@
+#include <map>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
 typedef unsigned char Uchar;
 typedef Uchar RAM;
 typedef Uchar REGISTER_8bit;
 typedef unsigned short Ushort;
+typedef std::pair<Uchar, bool> kPair;
+using namespace std;
 class Chip8
 {
 private:
@@ -14,7 +21,8 @@ private:
     Uchar soundTimer;
     REGISTER_8bit sp;
     Ushort stack[16];
-    Uchar key[16];
+    //Uchar key[16];
+    map<Uchar, bool> key;
     Uchar fontSet[80] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
         0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -35,6 +43,8 @@ private:
     };
 
 public:
+    void keyPadInit();
+    Uchar getKey();
     void initialize();
     void loadGame();
     void emulateCycle();

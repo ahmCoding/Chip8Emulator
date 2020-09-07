@@ -1,11 +1,41 @@
 #include "include/chip8.h"
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <ctime>
 
-using namespace std;
+Uchar Chip8::getKey()
+{
+    Uchar eingabe;
+    bool getK = false;
+    while (!getK)
+    {
+        cin >> eingabe;
+        if (key.find(eingabe) != key.end())
+        {
+            key[eingabe] = true;
+            getK = true;
+        }
+    }
+    return eingabe;
+}
 
+void Chip8::keyPadInit()
+{
+
+    key.insert(kPair('1', false));
+    key.insert(kPair('2', false));
+    key.insert(kPair('3', false));
+    key.insert(kPair('C', false));
+    key.insert(kPair('4', false));
+    key.insert(kPair('5', false));
+    key.insert(kPair('6', false));
+    key.insert(kPair('D', false));
+    key.insert(kPair('7', false));
+    key.insert(kPair('8', false));
+    key.insert(kPair('9', false));
+    key.insert(kPair('E', false));
+    key.insert(kPair('A', false));
+    key.insert(kPair('0', false));
+    key.insert(kPair('B', false));
+    key.insert(kPair('F', false));
+}
 void Chip8::initialize()
 {
 
@@ -13,7 +43,7 @@ void Chip8::initialize()
     opcode = 0;
     index = 0;
     sp = 0;
-
+    keyPadInit();
     for (int i = 0; i < 80; i++)
     {
         memory[i] = fontSet[i];
@@ -127,13 +157,20 @@ void Chip8::emulateCycle()
             pc += 2;
             break;
         case 0xE000:
-            if ((opcode & 0x000F) == 0x000E) //ToDo
+            if ((opcode & 0x000F) == 0x000E)
             {
+                if (key[v[opcode & 0x0F00 >> 8]])
+                    pc += 4;
+                else
+                    pc += 2;
             }
-            else //ToDo
+            else
             {
+                if (!key[v[opcode & 0x0F00 >> 8]])
+                    pc += 4;
+                else
+                    pc += 2;
             }
-            pc += 2;
             break;
 
         default:
@@ -224,9 +261,43 @@ void Chip8::emulateCycle()
             v[opcode & 0x0F00 >> 8] = getDelayTimer();
             pc += 2;
             break;
+        case 0x000A:
+            v[opcode & 0x0F00 >> 8] = getKey();
+            pc += 2;
+            break;
+
+        case 0x0015:
+            setDelayTimer(v[opcode & 0x0F00 >> 8]);
+            pc += 2;
+            break;
+        case 0x0018:
+            setSoundTimer(v[opcode & 0x0F00 >> 8]);
+            pc += 2;
+            break;
+        case 0x001E:
+            index += v[opcode & 0x0F00 >> 8];
+            pc += 2;
+            break;
+        case 0x0029: //ToDo
+            pc += 2;
+            break;
+        case 0x0033: //ToDo
+            pc += 2;
+            break;
+        case 0x0055: //ToDo
+            pc += 2;
+            break;
+        case 0x0065: //ToDo
+            pc += 2;
+            break;
 
         default:
             break;
         }
     }
+    else
+    {
+    }
+    if
+}
 }

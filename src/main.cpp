@@ -3,9 +3,18 @@
 
 int main()
 {
-    Chip8 tst;
-    tst.initialize();
-    tst.loadGame();
+    map<Uchar, bool> tst;
+    typedef std::pair<Uchar, bool> p;
+    tst.insert(p('1', true));
+    bool eing = false;
+    while (!eing)
+    {
+        Uchar g;
+        cin >> g;
+        eing = tst(g);
+    }
 
-    return 0;
+    //Chip8 tst;
+    //tst.initialize();
+    //tst.loadGame();
 }
