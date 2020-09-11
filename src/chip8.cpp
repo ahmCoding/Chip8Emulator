@@ -1,4 +1,5 @@
 #include "include/chip8.h"
+#include <SDL.h>
 
 Uchar Chip8::getKey()
 {
@@ -151,8 +152,23 @@ void Chip8::emulateCycle()
             pc += 2;
             break;
         case 0xD000: //ToDo
+            Ushort n = opcode & 0x000F;
+            Ushort x = opcode & 0x0F00 >> 8;
+            Ushort y = opcode & 0x00F0 >> 4;
+            for (size_t i = 0; i < n; i++)
+            {
+                Uchar memTmp = memory[index + i];
+
+                for (size_t j = 0; j < 8; j++)
+                {
+                    if ((screen[(x + i) * (y + j)] & (0x80 >> j)) && ((memTmp & (0x80 >> j))))
+                        v[0xF] = 0x1;
+                }
+                screen[i] ^= memTmp;
+            }
             pc += 2;
             break;
+
         case 0xE000:
             if ((opcode & 0x000F) == 0x000E)
             {
